@@ -1,0 +1,25 @@
+name: Mirror to Gitee
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: '0 0 * * *'                         # 每天北京时间午夜运行（PDT 时间晚上 8 点）
+  workflow_dispatch:                            # 支持手动触发
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: Yikun/hub-mirror-action@master
+        with:
+          src: github/zejunxu
+          dst: gitee/zejunxu
+          dst_token: ${{ secrets.GITEE_TOKEN }}
+          static_list: "smartdns-bak"           # 替换为自己的 GitHub 仓库的名
+          force_update: true                    # 强制推送以更新现有 Gitee 仓库
+          clone_style: https
+          debug: true                           # 启用详细日志以便调试
+          timeout: "60m"                        # 增加超时时间以处理大型仓库
+          api_timeout: "120"                    # 增加 API 超时时间以提高可靠性
+        env:
+          LANG: zh_CN.UTF-8
